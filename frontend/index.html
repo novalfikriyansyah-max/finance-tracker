@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker - Catat Keuangan Mudah</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Finance Tracker</h1>
+            <p>Catat pengeluaran & pemasukan dengan mudah</p>
+        </header>
+
+        <!-- Stats Card -->
+        <div class="stats-card">
+            <div class="stat-item">
+                <h3>Saldo</h3>
+                <span id="balance" class="amount">Rp 0</span>
+            </div>
+            <div class="stat-item">
+                <h3>Pemasukan</h3>
+                <span id="totalIncome" class="income">Rp 0</span>
+            </div>
+            <div class="stat-item">
+                <h3>Pengeluaran</h3>
+                <span id="totalExpense" class="expense">Rp 0</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2>Tambah Transaksi</h2>
+                
+                <div class="tabs">
+                    <button class="tab-button active" onclick="openTab('manual')">✏️ Manual</button>
+                    <button class="tab-button" onclick="openTab('upload')">📷 Upload Resi</button>
+                    <button class="tab-button" onclick="openTab('bank')">🏦 Import Bank</button>
+                </div>
+
+                <!-- Manual Input Tab -->
+                <div id="manualTab" class="tab-content active">
+                    <form id="manualForm">
+                        <div class="form-group">
+                            <label>Jenis Transaksi:</label>
+                            <select id="type" required>
+                                <option value="pemasukan">Pemasukan</option>
+                                <option value="pengeluaran">Pengeluaran</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Jumlah (Rp):</label>
+                            <input type="number" id="amount" placeholder="Contoh: 50000" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Kategori:</label>
+                            <select id="category" required>
+                                <option value="">Pilih Kategori</option>
+                                <option value="gaji">Gaji</option>
+                                <option value="investasi">Investasi</option>
+                                <option value="freelance">Freelance</option>
+                                <option value="makanan">Makanan</option>
+                                <option value="transportasi">Transportasi</option>
+                                <option value="belanja">Belanja</option>
+                                <option value="hiburan">Hiburan</option>
+                                <option value="kesehatan">Kesehatan</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Keterangan:</label>
+                            <input type="text" id="description" placeholder="Deskripsi transaksi" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tanggal:</label>
+                            <input type="date" id="date" required>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">💾 Tambah Transaksi</button>
+                    </form>
+                </div>
+
+                <!-- Upload Resi Tab -->
+                <div id="uploadTab" class="tab-content">
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="receipt" accept="image/*" hidden>
+                        <div class="upload-placeholder">
+                            <span>📷</span>
+                            <p>Klik untuk upload foto resi/struk</p>
+                            <small>Format: JPG, PNG (Maks. 5MB)</small>
+                        </div>
+                        <img id="preview" src="" alt="Preview" style="display: none;">
+                    </div>
+                    
+                    <div id="extractedData" class="extracted-data" style="display: none;">
+                        <h4>📋 Data yang Terdeteksi:</h4>
+                        <div class="data-preview">
+                            <p><strong>Jenis:</strong> <span id="detectedType">-</span></p>
+                            <p><strong>Jumlah:</strong> <span id="detectedAmount">-</span></p>
+                            <p><strong>Keterangan:</strong> <span id="detectedDescription">-</span></p>
+                            <p><strong>Kategori:</strong> <span id="detectedCategory">-</span></p>
+                        </div>
+                        <button type="button" id="confirmData" class="btn-success">✅ Konfirmasi & Simpan</button>
+                    </div>
+
+                    <div id="uploadStatus" style="display: none;"></div>
+                </div>
+
+                <!-- Bank Import Tab -->
+                <div id="bankTab" class="tab-content">
+                    <div class="bank-options">
+                        <div class="bank-card selected" data-bank="bca">
+                            <div class="bank-icon">🏦</div>
+                            <span>BCA</span>
+                        </div>
+                        <div class="bank-card" data-bank="mandiri">
+                            <div class="bank-icon">🏦</div>
+                            <span>Mandiri</span>
+                        </div>
+                        <div class="bank-card" data-bank="bni">
+                            <div class="bank-icon">🏦</div>
+                            <span>BNI</span>
+                        </div>
+                        <div class="bank-card" data-bank="bri">
+                            <div class="bank-icon">🏦</div>
+                            <span>BRI</span>
+                        </div>
+                    </div>
+
+                    <div class="upload-area" id="bankUploadArea">
+                        <input type="file" id="bankCsv" accept=".csv,.txt" hidden>
+                        <div class="upload-placeholder">
+                            <span>📊</span>
+                            <p>Upload file CSV dari internet banking</p>
+                            <small>Download laporan transaksi format CSV</small>
+                        </div>
+                    </div>
+
+                    <div id="bankImportResults" style="display: none;">
+                        <h4>📈 Hasil Import:</h4>
+                        <div class="import-summary">
+                            <p><strong>Total Transaksi:</strong> <span id="importCount">0</span></p>
+                            <p><strong>Pemasukan:</strong> <span id="importIncome">Rp 0</span></p>
+                            <p><strong>Pengeluaran:</strong> <span id="importExpense">Rp 0</span></p>
+                        </div>
+                        <button type="button" id="confirmImport" class="btn-success">✅ Simpan Semua Transaksi</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Section -->
+            <div class="transactions-section">
+                <h2>📊 Riwayat Transaksi</h2>
+                <div class="filters">
+                    <select id="filterType" onchange="filterTransactions()">
+                        <option value="all">Semua Transaksi</option>
+                        <option value="pemasukan">Pemasukan</option>
+                        <option value="pengeluaran">Pengeluaran</option>
+                    </select>
+                    <select id="filterCategory" onchange="filterTransactions()">
+                        <option value="all">Semua Kategori</option>
+                    </select>
+                    <input type="month" id="filterMonth" onchange="filterTransactions()">
+                </div>
+                
+                <div id="transactionsList" class="transactions-list">
+                    <div class="loading">Memuat transaksi...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
