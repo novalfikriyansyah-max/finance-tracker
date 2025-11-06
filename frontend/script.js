@@ -4,7 +4,7 @@ const getApiBase = () => {
         return 'http://localhost:3001/api';
     } else {
         // Ganti dengan URL backend Railway setelah deploy
-        return 'https://your-backend.railway.app/api';
+        return 'https://finance-tracker-r4mp.onrender.com/api';
     }
 };
 
@@ -454,3 +454,4 @@ async function updateStatistics() {
         // Update balance color
         const balanceElement = document.getElementById('balance');
         balanceElement.className = stats.balance >= 0 ? 'amount income' : 'amount expense';
+
